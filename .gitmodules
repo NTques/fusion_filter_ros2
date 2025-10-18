@@ -1,0 +1,6 @@
+[submodule "external/Fusion"]
+	path = external/Fusion
+	url = https://github.com/xioTechnologies/Fusion.git
+[submodule "Fusion"]
+	path = Fusion
+	url = https://github.com/xioTechnologies/Fusion.git

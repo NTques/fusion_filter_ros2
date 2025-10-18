@@ -1,0 +1,27 @@
+imu_fusion_filter:
+  ros__parameters:
+    sample_rate: 100 # Hz, IMU update rate
+    use_magnetic_field: true # use IMU Magnetic field
+    calibration:
+      gyroscope_misalignment: [1.0, 0.0, 0.0,
+                               0.0, 1.0, 0.0,
+                               0.0, 0.0, 1.0]
+      gyroscope_sensitivity:  [1.0, 1.0, 1.0]
+      gyroscope_offset:       [0.0, 0.0, 0.0]
+      accelerometer_misalignment: [1.0, 0.0, 0.0,
+                                   0.0, 1.0, 0.0,
+                                   0.0, 0.0, 1.0]
+      accelerometer_sensitivity:  [1.0, 1.0, 1.0]
+      accelerometer_offset:       [0.0, 0.0, 0.0]
+      soft_iron_matrix: [1.0, 0.0, 0.0,
+                         0.0, 1.0, 0.0,
+                         0.0, 0.0, 1.0]
+      hard_iron_offset: [0.0, 0.0, 0.0]
+    ahrs:
+      convention: "ENU"
+      gain: 0.8
+      gyroscope_range: 2000.0
+      acceleration_rejection: 10.0
+      magnetic_rejection: 10.0
+      recovery_trigger_period: 500
+
