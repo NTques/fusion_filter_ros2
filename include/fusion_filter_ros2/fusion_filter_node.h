@@ -9,11 +9,13 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/magnetic_field.hpp>
 
+#include "fusion_filter_ros2/fusion_filter_parameters.hpp"
+
 #include "Fusion.h"
 
 #define FUSION_ARRAY_SIZE 3
 
-namespace fusion
+namespace fusion_filter
 {
     class FusionFilterNode : public rclcpp::Node
     {
@@ -21,18 +23,19 @@ namespace fusion
         explicit FusionFilterNode();
         ~FusionFilterNode() override = default;
 
-    private:
-        FusionVector get_calibration_parameter_as_fusion_vector(const std::string& name,
-                                                                const std::vector<double>& default_value);
-        FusionMatrix get_calibration_parameter_as_fusion_matrix(const std::string& name,
-                                                                const std::vector<double>& default_value);
+        void init();
 
+    private:
         void imu_callback(const sensor_msgs::msg::Imu& msg);
         void mag_callback(const sensor_msgs::msg::MagneticField& mag);
 
+        std::array<double, 9> vector_to_covariance(const std::vector<double>& vec);
+        FusionVector vector_to_fusion_vector(const std::vector<double>& vec);
+        FusionMatrix vector_to_fusion_matrix(const std::vector<double>& vec);
+
     protected:
-        int _sample_rate;
-        bool _use_magnetic_field;
+        std::shared_ptr<ParamListener> _param_listener;
+        Params _params;
 
         rclcpp::Clock _steady_clock;
 
@@ -43,7 +46,12 @@ namespace fusion
         FusionVector _mag;
         rclcpp::Time _prev_time;
 
-        // imu calibration parameters
+        // AHRS algorithms
+        FusionOffset _offset;
+        FusionAhrs _ahrs;
+        FusionAhrsSettings _settings;
+
+        // IMU calibration parameters
         FusionMatrix _gyroscope_misalignment;
         FusionVector _gyroscope_sensitivity;
         FusionVector _gyroscope_offset;
@@ -53,10 +61,10 @@ namespace fusion
         FusionMatrix _soft_iron_matrix;
         FusionVector _hard_iron_offset;
 
-        // AHRS algorithms
-        FusionOffset _offset;
-        FusionAhrs _ahrs;
-        FusionAhrsSettings _settings;
+        // filtered IMU data covariances
+        std::array<double, 9> _orientation_covariance;
+        std::array<double, 9> _angular_velocity_covariance;
+        std::array<double, 9> _linear_acceleration_covariance;
     };
 } // fusion
 

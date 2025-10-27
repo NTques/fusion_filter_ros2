@@ -1,0 +1,160 @@
+fusion_filter:
+  sample_rate: {
+    type: int,
+    default_value: 100,
+    description: "Raw imu data rate",
+    validation: {
+      gt<>: [ 0 ]
+    }
+  }
+  use_magnetic_field: {
+    type: bool,
+    default_value: false,
+    description: "IMU magnetic field data usage."
+  }
+  orientation_covariance: {
+    type: double_array,
+    default_value: [ 0.005, 0.0, 0.0, 0.0, 0.005, 0.0, 0.0, 0.0, 0.005 ],
+    description: "Orientation covariance of the filtered IMU data.",
+    validation: {
+      fixed_size<>: [ 9 ]
+    }
+  }
+  angular_velocity_covariance: {
+    type: double_array,
+    default_value: [ 0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.1 ],
+    description: "Angular velocity covariance of the filtered IMU data.",
+    validation: {
+      fixed_size<>: [ 9 ]
+    }
+  }
+  linear_acceleration_covariance: {
+    type: double_array,
+    default_value: [ 0.3, 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 0.3 ],
+    description: "Linear acceleration covariance of the filtered IMU data.",
+    validation: {
+      fixed_size<>: [ 9 ]
+    }
+  }
+  calibration: {
+    gyroscope: {
+      misalignment: {
+        type: double_array,
+        default_value: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ],
+        description: "Gyroscope axis misalignment correction matrix.",
+        validation: {
+          fixed_size<>: [ 9 ]
+        }
+      },
+      sensitivity: {
+        type: double_array,
+        default_value: [ 1.0, 1.0, 1.0 ],
+        description: "Gyroscope angular velocity measurement sensitivity correction factor.",
+        validation: {
+          fixed_size<>: [ 3 ]
+        }
+      },
+      offset: {
+        type: double_array,
+        default_value: [ 0.0, 0.0, 0.0 ],
+        description: "Gyroscope offset correction value.",
+        validation: {
+          fixed_size<>: [ 3 ]
+        }
+      }
+    },
+    accelerometer: {
+      misalignment: {
+        type: double_array,
+        default_value: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ],
+        description: "Accelerometer axis misalignment correction matrix.",
+        validation: {
+          fixed_size<>: [ 9 ]
+        }
+      },
+      sensitivity: {
+        type: double_array,
+        default_value: [ 1.0, 1.0, 1.0 ],
+        description: "Accelerometer acceleration measurement sensitivity correction factor.",
+        validation: {
+          fixed_size<>: [ 3 ]
+        }
+      },
+      offset: {
+        type: double_array,
+        default_value: [ 0.0, 0.0, 0.0 ],
+        description: "Accelerometer bias (offset) correction value.",
+        validation: {
+          fixed_size<>: [ 3 ]
+        }
+      }
+    },
+    iron: {
+      soft_matrix: {
+        type: double_array,
+        default_value: [ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 ],
+        description: "Soft iron distortion correction matrix for the magnetometer.",
+        validation: {
+          fixed_size<>: [ 9 ]
+        }
+      },
+      hard_offset: {
+        type: double_array,
+        default_value: [ 0.0, 0.0, 0.0 ],
+        description: "Hard iron distortion correction offset for the magnetometer.",
+        validation: {
+          fixed_size<>: [ 3 ]
+        }
+      }
+    }
+  }
+  ahrs: {
+    convention: {
+      type: string,
+      default_value: "ENU",
+      description: "Earth axes convention (NWU, ENU, or NED).",
+      validation: {
+        one_of<>: [ [ "ENU", "NED", "NWU" ] ]
+      }
+    },
+    gain: {
+      type: double,
+      default_value: 0.5,
+      description: "Determines the influence of the gyroscope relative to other sensors.",
+      validation: {
+        gt<>: [ 0 ]
+      }
+    },
+    gyroscope_range: {
+      type: double,
+      default_value: 2000.0,
+      description: "Gyroscope range (in degrees per second).",
+      validation: {
+        gt<>: [ 0 ]
+      }
+    },
+    acceleration_rejection: {
+      type: double,
+      default_value: 10.0,
+      description: "Threshold (in degrees) used by the acceleration rejection feature.",
+      validation: {
+        gt<>: [ 0 ]
+      }
+    },
+    magnetic_rejection: {
+      type: double,
+      default_value: 10.0,
+      description: "Threshold (in degrees) used by the magnetic rejection feature.",
+      validation: {
+        gt<>: [ 0 ]
+      }
+    },
+    recovery_trigger_period: {
+      type: int,
+      default_value: 500,
+      description: "Acceleration and magnetic recovery trigger period (in samples).",
+      validation: {
+        gt<>: [ 0 ]
+      }
+    }
+  }
